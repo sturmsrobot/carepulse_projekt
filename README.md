@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# CarePulse Projekt
 
-## Getting Started
+Dies ist ein Healthcare-Projekt, das mit Next.js, TypeScript und Tailwind CSS entwickelt wurde. Es wurde basierend auf dem Tutorial von JavaScript Mastery erstellt.
 
-First, run the development server:
+## Technologien
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+	•	Next.js: Ein React-Framework für die Entwicklung von Webanwendungen.
+	•	TypeScript: Eine typisierte Superset von JavaScript, das für die Entwicklung von robusteren Anwendungen verwendet wird.
+	•	Tailwind CSS: Ein Utility-First CSS-Framework für schnellere und einfachere UI-Entwicklung.
+	•	React: Eine JavaScript-Bibliothek für den Aufbau von Benutzeroberflächen.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Weitere Ressourcen
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+	•	Next.js Dokumentation
+	•	Tailwind CSS Dokumentation
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Arbeitsschritte:
 
-## Learn More
+# Projekt initialisieren:
+`npx create-next-app@latest ./ `verwendet, um ein neues Next.js-Projekt zu erstellen.
 
-To learn more about Next.js, take a look at the following resources:
+# Tailwind CSS Installation:
+	•	Tailwind CSS und PostCSS installiert und konfiguriert:
+`npm install -D tailwindcss postcss autoprefixer`
+`npx tailwindcss init -p`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Tailwind-Anweisungen zur globals.css hinzugefügt:
+`@tailwind base;`
+`@tailwind components;`
+`@tailwind utilities;`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Ressourcen
 
-## Deploy on Vercel
+	•	GitHub-Repository: CarePulse Projekt
+	•	Tutorial: YouTube Video
+	•	Design-Ressourcen: JS Mastery Resource
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Initialisierung und Einrichtung:
+	•	Projekt initialisiert und grundlegende Struktur mit Next.js erstellt.
+	•	Tailwind CSS, PostCSS und Autoprefixer installiert und konfiguriert.
+    
+## Styling und Layout:
+	•	globals.css mit Tailwind CSS basisklassen versehen.
+	•	Erste UI-Komponenten und Layouts mit Tailwind CSS gestaltet.
