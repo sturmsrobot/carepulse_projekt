@@ -29,6 +29,25 @@ Dies ist ein Healthcare-Projekt, das mit Next.js, TypeScript und Tailwind CSS en
 `@tailwind components;`
 `@tailwind utilities;`
 
+### CustomFormField und PatientForm erstellt: 
+Grundlegende Struktur für benutzerdefinierte Formularelemente und das Patientenformular erstellt.
+
+### CustomFormField und PatientForm SubmitButton erstellt: 
+Benutzerdefinierte Formularelemente und einen Submit-Button für das Patientenformular erstellt.
+
+### UserFormValidation erstellt: 
+Validierungslogik für Benutzerformulare erstellt.
+
+### Initialisierung AppWrite: 
+AppWrite initialisiert und integriert.
+
+### Initialisierung DB/Backend: 
+Grundlegende Einrichtung der Datenbank und Backend-Funktionalitäten implementiert.
+
+### Telefonnummereingabe angepasst: 
+Anpassungen an der Eingabe für Telefonnummern vorgenommen, um eine bessere Benutzerfreundlichkeit zu gewährleisten.
+
+
 ## Ressourcen
 
 	•	GitHub-Repository: CarePulse Projekt
