@@ -1,11 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import CustomFormField from "./CustomFormField";
+import SubmitButton from "../ui/SubmitButton";
+import { useState } from "react";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -24,6 +26,8 @@ const formSchema = z.object({
 });
 
 const PatientForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,7 +54,25 @@ const PatientForm = () => {
           iconSrc="/assets/icons/user.svg"
           iconAlt="user"
         />
-        <Button type="submit">Absenden</Button>
+
+        <CustomFormField
+          fieldType={FormFieldType.INPUT}
+          control={form.control}
+          name="email"
+          label="E-Mail"
+          placeholder="maxmustermann@beispiel.de"
+          iconSrc="/assets/icons/email.svg"
+          iconAlt="email"
+        />
+
+        <CustomFormField
+          fieldType={FormFieldType.PHONE_INPUT}
+          control={form.control}
+          name="phone"
+          label="Telefonnummer"
+          placeholder="(0123) 456 789"
+        />
+        <SubmitButton isLoading={isLoading}>Los geht's!</SubmitButton>
       </form>
     </Form>
   );
