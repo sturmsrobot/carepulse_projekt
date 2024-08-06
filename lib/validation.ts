@@ -9,7 +9,7 @@ export const UserFormValidation = z.object({
   phone: z
     .string()
     .refine(
-      (phone) => /^[0-9]{10,15}$/.test(phone),
+      (phone) => /^\+\d{10,15}$/.test(phone),
       "Die Telefonnummer ist ungültig."
     ),
 });
