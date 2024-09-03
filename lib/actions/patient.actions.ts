@@ -13,19 +13,18 @@ export const createUser = async (user: CreateUserParams) => {
       undefined,
       user.name
     );
-    console.log({ newuser });
+
     return parseStringify(newuser);
   } catch (error: any) {
     // Check existing user
-    if (error && error?.code == 409) {
-      const documents = await users.list([Query.equal("email", [user.email])]);
+    if (error && error?.code === 409) {
+      const existingUser = await users.list([
+        Query.equal("email", [user.email]),
+      ]);
 
-      return documents?.users[0];
+      return existingUser.users[0];
     }
-    console.error(
-      "Ein Fehler ist, während der Erstellung eines neuen Nutzers, aufgetreten:",
-      error
-    );
+    console.error("An error occurred while creating a new user:", error);
   }
 };
 
