@@ -8,6 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
 import { Control, FieldValues } from "react-hook-form";
 import { FormFieldType } from "./PatientForm";
@@ -30,13 +31,7 @@ interface CustomProps {
   renderSkeleton?: (field: any) => React.ReactNode;
 }
 
-const RenderField = ({
-  field,
-  props,
-}: {
-  field: FieldValues;
-  props: CustomProps;
-}) => {
+const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
   const { fieldType, iconSrc, iconAlt, placeholder } = props;
 
   switch (fieldType) {

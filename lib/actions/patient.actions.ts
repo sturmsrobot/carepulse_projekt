@@ -4,20 +4,20 @@ import { parseStringify } from "../utils";
 
 export const createUser = async (user: CreateUserParams) => {
   try {
-    const newuser = await users.create(
+    const newUser = await users.create(
       ID.unique(),
       user.email,
       user.phone,
       undefined,
       user.name
     );
-    return parseStringify(newuser);
+    return parseStringify(newUser);
   } catch (error: any) {
     // Checking existing user
     if (error && error?.code == 409) {
-      const document = await users.list([Query.equal("email", [user.email])]);
+      const documents = await users.list([Query.equal("email", [user.email])]);
 
-      return document?.users[0];
+      return documents?.users[0];
     }
     console.error("An error occured while creating a new user:", error);
   }

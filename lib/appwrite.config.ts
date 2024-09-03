@@ -39,7 +39,7 @@ console.log(API_KEY);
 console.log(PROJECT_ID);
 
 export const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "https://cloud.appwrite.io/v1",
   optionsSuccessStatus: 200,
 };
 
