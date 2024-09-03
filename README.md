@@ -29,24 +29,25 @@ Dies ist ein Healthcare-Projekt, das mit Next.js, TypeScript und Tailwind CSS en
 `@tailwind components;`
 `@tailwind utilities;`
 
-### CustomFormField und PatientForm erstellt: 
-Grundlegende Struktur für benutzerdefinierte Formularelemente und das Patientenformular erstellt.
+### Formularerstellung:
+	•	CustomFormField und PatientForm erstellt:
+	•	Grundlegende Struktur für benutzerdefinierte Formularelemente und das Patientenformular erstellt.
+	•	SubmitButton hinzugefügt:
+	•	Benutzerdefinierte Formularelemente und einen Submit-Button für das Patientenformular erstellt.
+	•	UserFormValidation erstellt:
+	•	Validierungslogik für Benutzerformulare erstellt.
 
-### CustomFormField und PatientForm SubmitButton erstellt: 
-Benutzerdefinierte Formularelemente und einen Submit-Button für das Patientenformular erstellt.
+### AppWrite-Integration: 
+	•	Initialisierung Appwrite:
+	•	Appwrite initialisiert und integriert.
+	•	Fehlerbehebung bei Benutzererstellung:
+	•	Probleme bei der Integration und Benutzererstellung gelöst.
 
-### UserFormValidation erstellt: 
-Validierungslogik für Benutzerformulare erstellt.
-
-### Initialisierung AppWrite: 
-AppWrite initialisiert und integriert.
-
-### Initialisierung DB/Backend: 
-Grundlegende Einrichtung der Datenbank und Backend-Funktionalitäten implementiert.
-
-### Telefonnummereingabe angepasst: 
-Anpassungen an der Eingabe für Telefonnummern vorgenommen, um eine bessere Benutzerfreundlichkeit zu gewährleisten.
-
+### Datenbank und Backend:
+	•	Initialisierung DB/Backend:
+	•	Grundlegende Einrichtung der Datenbank und Backend-Funktionalitäten implementiert.
+	•	Telefonnummereingabe angepasst:
+	•	Anpassungen an der Eingabe für Telefonnummern vorgenommen.
 
 ## Ressourcen
 
