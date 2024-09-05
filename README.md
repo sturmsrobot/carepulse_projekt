@@ -36,6 +36,9 @@ Dies ist ein Healthcare-Projekt, das mit Next.js, TypeScript und Tailwind CSS en
 	•	Benutzerdefinierte Formularelemente und einen Submit-Button für das Patientenformular erstellt.
 	•	UserFormValidation erstellt:
 	•	Validierungslogik für Benutzerformulare erstellt.
+	•	RegisterForm erstellt
+	•	PatientActions aktualisiert
+
 
 ### AppWrite-Integration: 
 	•	Initialisierung Appwrite:
