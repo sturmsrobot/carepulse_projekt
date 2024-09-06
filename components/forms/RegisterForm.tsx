@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { set, useForm } from "react-hook-form";
 import { z } from "zod";
-import { Form } from "@/components/ui/form";
+import { Form, FormControl } from "@/components/ui/form";
 import CustomFormField from "./CustomFormField";
 import SubmitButton from "../ui/SubmitButton";
 import { useReducer, useState } from "react";
@@ -11,6 +11,9 @@ import { UserFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { createUser } from "@/lib/actions/patient.actions";
 import { FormFieldType } from "./PatientForm";
+import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
+import { GenderOptions } from "@/constants";
+import { Label } from "@radix-ui/react-label";
 
 const RegisterForm = ({ user }: { user: User }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -56,6 +59,7 @@ const RegisterForm = ({ user }: { user: User }) => {
           <div className="mb-9 space-y-1">
             <h2 className="sub-header">Persönliche Informationen</h2>
           </div>
+          {/* NAME */}
         </section>
         <CustomFormField
           fieldType={FormFieldType.INPUT}
@@ -84,6 +88,38 @@ const RegisterForm = ({ user }: { user: User }) => {
             name="phone"
             label="Telefonnummer"
             placeholder="(01234) 567 890"
+          />
+        </div>
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FormFieldType.DATE_PICKER}
+            control={form.control}
+            name="birthDate"
+            label="Geburtsdatum"
+          />{" "}
+          <CustomFormField
+            fieldType={FormFieldType.SKELETON}
+            control={form.control}
+            name="gender"
+            label="Geschlecht"
+            renderSkeleton={(field) => (
+              <FormControl>
+                <RadioGroup
+                  className="flex h-11 gap-6 xl:justify-between"
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  {GenderOptions.map((option, i) => (
+                    <div key={option + i} className="radio-group">
+                      <RadioGroupItem value={option} id={option} />
+                      <Label htmlFor={option} className="cursor-pointer">
+                        {option}
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            )}
           />
         </div>
 

@@ -20,6 +20,6 @@ export const users = new sdk.Users(client);
 export const messaging = new sdk.Messaging(client);
 export const storage = new sdk.Storage(client);
 
-console.log(process.env.NEXT_PUBLIC_ENDPOINT);
-console.log(process.env.NEXT_PUBLIC_PROJECT_ID);
-console.log(process.env.NEXT_PUBLIC_API_KEY);
+// console.log(process.env.NEXT_PUBLIC_ENDPOINT);
+// console.log(process.env.NEXT_PUBLIC_PROJECT_ID);
+// console.log(process.env.NEXT_PUBLIC_API_KEY);

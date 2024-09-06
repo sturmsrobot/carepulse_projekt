@@ -49,7 +49,7 @@ export const getUser = async (userId: string) => {
     return parseStringify(user);
   } catch (error) {
     console.error(
-      "An error occurred while retrieving the user details:",
+      "Beim Abrufen der Benutzerdaten ist ein Fehler aufgetreten:",
       error
     );
   }
