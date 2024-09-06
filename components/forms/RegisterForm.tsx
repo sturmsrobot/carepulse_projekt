@@ -16,8 +16,8 @@ import { GenderOptions } from "@/constants";
 import { Label } from "@radix-ui/react-label";
 
 const RegisterForm = ({ user }: { user: User }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof UserFormValidation>>({
     resolver: zodResolver(UserFormValidation),
@@ -59,8 +59,8 @@ const RegisterForm = ({ user }: { user: User }) => {
           <div className="mb-9 space-y-1">
             <h2 className="sub-header">Persönliche Informationen</h2>
           </div>
-          {/* NAME */}
         </section>
+        {/* NAME */}
         <CustomFormField
           fieldType={FormFieldType.INPUT}
           control={form.control}
@@ -70,7 +70,7 @@ const RegisterForm = ({ user }: { user: User }) => {
           iconSrc="/assets/icons/user.svg"
           iconAlt="user"
         />
-
+        {/* EMAIL & PHONE */}
         <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             fieldType={FormFieldType.INPUT}
@@ -90,13 +90,14 @@ const RegisterForm = ({ user }: { user: User }) => {
             placeholder="(01234) 567 890"
           />
         </div>
+        {/* BirthDate & Gender */}
         <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             fieldType={FormFieldType.DATE_PICKER}
             control={form.control}
             name="birthDate"
             label="Geburtsdatum"
-          />{" "}
+          />
           <CustomFormField
             fieldType={FormFieldType.SKELETON}
             control={form.control}
