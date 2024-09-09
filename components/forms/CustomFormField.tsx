@@ -16,7 +16,9 @@ import Image from "next/image";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import ReactDatePicker from "react-datepicker";
-import { useState } from "react";
+import React, { useState } from "react";
+import "react-datepicker/dist/react-datepicker.css";
+import "@/styles/custom-radio.css";
 
 interface CustomProps {
   control: Control<any>;

@@ -105,20 +105,28 @@ const RegisterForm = ({ user }: { user: User }) => {
             label="Geschlecht"
             renderSkeleton={(field) => (
               <FormControl>
-                <RadioGroup
-                  className="flex h-11 gap-6 xl:justify-between"
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  {GenderOptions.map((option, i) => (
-                    <div key={option + i} className="radio-group">
-                      <RadioGroupItem value={option} id={option} />
-                      <Label htmlFor={option} className="cursor-pointer">
-                        {option}
-                      </Label>
-                    </div>
-                  ))}
-                </RadioGroup>
+                <div className="flex justify-center items-center rounded-md border border-dark-500 bg-dark-400 mt-4">
+                  <RadioGroup
+                    className="flex h-11 gap-6 xl:justify-between"
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    {GenderOptions.map((option, i) => (
+                      <div key={option + i} className="radio-group-item">
+                        <input
+                          type="radio"
+                          id={option}
+                          value={option}
+                          {...field}
+                          className="form-radio"
+                        />
+                        <Label htmlFor={option} className="cursor-pointer">
+                          {option}
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </div>
               </FormControl>
             )}
           />
