@@ -124,6 +124,50 @@ const RegisterForm = ({ user }: { user: User }) => {
           />
         </div>
 
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="address"
+            label="Adresse"
+            placeholder="Musterstraße 1, 12345 Musterstadt"
+          />
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="occupation"
+            label="Beruf"
+            placeholder="z.B. Softwareentwickler"
+          />
+        </div>
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="emergencyContactName"
+            label="Name Notfallkontakt "
+            placeholder="Name Ihres Notfallkontaktes"
+          />
+
+          <CustomFormField
+            fieldType={FormFieldType.PHONE_INPUT}
+            control={form.control}
+            name="emergencyContactNumber"
+            label="Telefonnummer Notfallkontakt "
+            placeholder="(01234) 567 890"
+          />
+        </div>
+
+        <section className="space-y-6">
+          <div className="mb-9 space-y-1">
+            <h2 className="sub-header">Medizinische Informationen</h2>
+          </div>
+        </section>
+        <div className="flex flex-col gap-6 xl:flex-row"></div>
+        <div className="flex flex-col gap-6 xl:flex-row"></div>
+        <div className="flex flex-col gap-6 xl:flex-row"></div>
+        <div className="flex flex-col gap-6 xl:flex-row"></div>
+
         <SubmitButton isLoading={isLoading}>Los geht's!</SubmitButton>
       </form>
     </Form>
