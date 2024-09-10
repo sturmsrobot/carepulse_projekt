@@ -11,7 +11,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Control, FieldValues } from "react-hook-form";
-import { FormFieldType } from "./PatientForm";
+import { FormFieldType } from "./forms/PatientForm";
 import Image from "next/image";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
@@ -21,10 +21,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import "@/styles/custom-radio.css";
 import {
   Select,
-  SelectContent,
   SelectTrigger,
+  SelectContent,
   SelectValue,
-} from "@radix-ui/react-select";
+  SelectItem,
+  SelectSeparator,
+} from "@/components/ui/select";
 
 interface CustomProps {
   control: Control<any>;
@@ -114,10 +116,17 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
     case FormFieldType.SELECT:
       return (
         <FormControl>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select
+            onValueChange={(value) => {
+              console.log(value);
+              field.onChange(value);
+            }}
+            defaultValue={field.value}
+          >
+            {/* <Select onValueChange={field.onChange} defaultValue={field.value}> */}
             <FormControl>
               <SelectTrigger className="shad-select-trigger">
-                <SelectValue placeholder={props.placeholder} />
+                <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
             <SelectContent className="shad-select-content">
