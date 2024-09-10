@@ -112,7 +112,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             label="Geschlecht"
             renderSkeleton={(field) => (
               <FormControl>
-                <div className="flex justify-center items-center rounded-md border border-dark-500 bg-dark-400 mt-4">
+                <div className="flex justify-center items-center rounded-md border border-dark-500 bg-dark-400 mt-8">
                   <RadioGroup
                     className="flex h-11 gap-6 xl:justify-between"
                     onValueChange={field.onChange}
@@ -121,6 +121,7 @@ const RegisterForm = ({ user }: { user: User }) => {
                     {GenderOptions.map((option, i) => (
                       <div key={option + i} className="radio-group-item">
                         <input
+                          style={{ marginTop: 10, padding: 0 }}
                           type="radio"
                           id={option}
                           value={option}
@@ -184,8 +185,8 @@ const RegisterForm = ({ user }: { user: User }) => {
           fieldType={FormFieldType.SELECT}
           control={form.control}
           name="primaryPhysician"
-          label="Hausarzt"
-          placeholder="Wählen Sie einen Arzt aus"
+          label="Primary care physician"
+          placeholder="Select a physician"
         >
           {Doctors.map((doctor, i) => (
             <SelectItem key={doctor.name + i} value={doctor.name}>
