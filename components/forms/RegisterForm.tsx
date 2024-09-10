@@ -1,19 +1,26 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useReducer, useState } from "react";
 import { set, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form, FormControl } from "@/components/ui/form";
+import { Label } from "@radix-ui/react-label";
+import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
+import { SelectItem } from "@/components/ui/select";
+import {
+  Doctors,
+  GenderOptions,
+  IdentificationTypes,
+  PatientFormDefaultValues,
+} from "@/constants";
 import CustomFormField from "./CustomFormField";
 import SubmitButton from "../ui/SubmitButton";
-import { useReducer, useState } from "react";
 import { UserFormValidation } from "@/lib/validation";
-import { useRouter } from "next/navigation";
 import { createUser } from "@/lib/actions/patient.actions";
 import { FormFieldType } from "./PatientForm";
-import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
-import { GenderOptions } from "@/constants";
-import { Label } from "@radix-ui/react-label";
 
 const RegisterForm = ({ user }: { user: User }) => {
   const router = useRouter();
@@ -171,6 +178,30 @@ const RegisterForm = ({ user }: { user: User }) => {
             <h2 className="sub-header">Medizinische Informationen</h2>
           </div>
         </section>
+
+        {/* HAUSARZT */}
+        <CustomFormField
+          fieldType={FormFieldType.SELECT}
+          control={form.control}
+          name="primaryPhysician"
+          label="Hausarzt"
+          placeholder="Wählen Sie einen Arzt aus"
+        >
+          {Doctors.map((doctor, i) => (
+            <SelectItem key={doctor.name + i} value={doctor.name}>
+              <div className="flex cursor-pointer items-center gap-2">
+                <Image
+                  src={doctor.image}
+                  width={32}
+                  height={32}
+                  alt="doctor"
+                  className="rounded-full border border-dark-500"
+                />
+                <p>{doctor.name}</p>
+              </div>
+            </SelectItem>
+          ))}
+        </CustomFormField>
         <div className="flex flex-col gap-6 xl:flex-row"></div>
         <div className="flex flex-col gap-6 xl:flex-row"></div>
         <div className="flex flex-col gap-6 xl:flex-row"></div>
