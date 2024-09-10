@@ -16,7 +16,7 @@ import {
   IdentificationTypes,
   PatientFormDefaultValues,
 } from "@/constants";
-import CustomFormField from "./CustomFormField";
+import CustomFormField from "../CustomFormField";
 import SubmitButton from "../ui/SubmitButton";
 import { UserFormValidation } from "@/lib/validation";
 import { createUser } from "@/lib/actions/patient.actions";
@@ -185,8 +185,8 @@ const RegisterForm = ({ user }: { user: User }) => {
           fieldType={FormFieldType.SELECT}
           control={form.control}
           name="primaryPhysician"
-          label="Primary care physician"
-          placeholder="Select a physician"
+          label="Hausarzt"
+          placeholder="Bitte auswählen"
         >
           {Doctors.map((doctor, i) => (
             <SelectItem key={doctor.name + i} value={doctor.name}>
