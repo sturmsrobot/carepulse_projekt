@@ -27,55 +27,53 @@ export const PatientFormDefaultValues = {
 };
 
 export const IdentificationTypes = [
-  "Birth Certificate",
-  "Driver's License",
-  "Medical Insurance Card/Policy",
-  "Military ID Card",
-  "National Identity Card",
-  "Passport",
-  "Resident Alien Card (Green Card)",
-  "Social Security Card",
-  "State ID Card",
-  "Student ID Card",
-  "Voter ID Card",
+  "Geburtsurkunde",
+  "Führerschein",
+  "Krankenversicherungskarte",
+  "Militärausweis",
+  "Personalausweis",
+  "Reisepass",
+  "Aufenthaltsgenehmigung",
+  "Sozialversicherungskarte",
+  "Studentenausweis",
 ];
 
 export const Doctors = [
   {
     image: "/assets/images/dr-green.png",
-    name: "John Green",
+    name: "Prof. Dr. med. Max Müller",
   },
   {
     image: "/assets/images/dr-cameron.png",
-    name: "Leila Cameron",
+    name: "Prof. Dr. med. Anna Schmitz",
   },
   {
     image: "/assets/images/dr-livingston.png",
-    name: "David Livingston",
+    name: "Dr. med. Peter Wagner, MSc",
   },
   {
     image: "/assets/images/dr-peter.png",
-    name: "Evan Peter",
+    name: "Dr. med. Thomas Schneider, MSc",
   },
   {
     image: "/assets/images/dr-powell.png",
-    name: "Jane Powell",
+    name: "Dr. med. Lisa Meier, PhD",
   },
   {
     image: "/assets/images/dr-remirez.png",
-    name: "Alex Ramirez",
+    name: "Dr. med. Klaus Fischer, PhD",
   },
   {
     image: "/assets/images/dr-lee.png",
-    name: "Jasmine Lee",
+    name: "Dr. med. Maria Hoffmann, MSc",
   },
   {
     image: "/assets/images/dr-cruz.png",
-    name: "Alyana Cruz",
+    name: "Dr. med. Sabine Becker, Prof. Dr. med.",
   },
   {
     image: "/assets/images/dr-sharma.png",
-    name: "Hardik Sharma",
+    name: "Dr. Julian Weber",
   },
 ];
 

@@ -21,6 +21,7 @@ import SubmitButton from "../ui/SubmitButton";
 import { UserFormValidation } from "@/lib/validation";
 import { createUser } from "@/lib/actions/patient.actions";
 import { FormFieldType } from "./PatientForm";
+import FileUploader from "../FileUploader";
 
 const RegisterForm = ({ user }: { user: User }) => {
   const router = useRouter();
@@ -203,10 +204,120 @@ const RegisterForm = ({ user }: { user: User }) => {
             </SelectItem>
           ))}
         </CustomFormField>
-        <div className="flex flex-col gap-6 xl:flex-row"></div>
-        <div className="flex flex-col gap-6 xl:flex-row"></div>
-        <div className="flex flex-col gap-6 xl:flex-row"></div>
-        <div className="flex flex-col gap-6 xl:flex-row"></div>
+        {/* VERSICHERUNG & VERSICHERTENNUMMER */}
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="insuranceProvider"
+            label="Krankenkasse"
+            placeholder="z.B. AOK"
+          />
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="insurancePolicyNumber"
+            label="Versichertennummer"
+            placeholder="1234567890"
+          />
+        </div>
+        {/* ALLERGIEN & AKTUELLE MEDIKATION */}
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FormFieldType.TEXTAREA}
+            control={form.control}
+            name="allergies"
+            label="Allergien (falls vorhanden)"
+            placeholder="z.B. Erdnuss, Penicillin, Pollen"
+          />
+          <CustomFormField
+            fieldType={FormFieldType.TEXTAREA}
+            control={form.control}
+            name="currentMedication"
+            label="aktuelle Medikation (falls vorhanden)"
+            placeholder="z.B. Ibuprofen 200mg, Paracetamol 500mg"
+          />
+        </div>
+        {/* FAMILIENANAMNESE & MED. VORGESCHICHTE */}
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FormFieldType.TEXTAREA}
+            control={form.control}
+            name="familyMedicalHistory"
+            label="Familienanamnese"
+            placeholder="z.B. Mutter hat Brustkrebs, Vater hatte Herzkrankheiten."
+          />
+          <CustomFormField
+            fieldType={FormFieldType.TEXTAREA}
+            control={form.control}
+            name="pastMedicalHistory"
+            label="medizinische Vorgeschichte"
+            placeholder="z.B. Blinddarmoperation, Tonsillektomie"
+          />
+        </div>
+        <section className="space-y-6">
+          <div className="mb-9 space-y-1">
+            <h2 className="sub-header">Identifikation und Überprüfung</h2>
+          </div>
+        </section>
+
+        <CustomFormField
+          fieldType={FormFieldType.SELECT}
+          control={form.control}
+          name="identificationType"
+          label="Identifikationsart"
+          placeholder="Bitte wählen Sie eine Identifikationsart"
+        >
+          {IdentificationTypes.map((type, i) => (
+            <SelectItem key={type + i} value={type}>
+              {type}
+            </SelectItem>
+          ))}
+        </CustomFormField>
+
+        <CustomFormField
+          fieldType={FormFieldType.INPUT}
+          control={form.control}
+          name="identifactionNumber"
+          label="Identifikationsnummer"
+          placeholder="z.B. S123456789"
+        />
+        <CustomFormField
+          fieldType={FormFieldType.SKELETON}
+          control={form.control}
+          name="identificationDocument"
+          label=" Kopie des Identifikationsdokuments"
+          renderSkeleton={(field) => (
+            <FormControl>
+              <FileUploader files={field.value} onChange={field.onChange} />
+            </FormControl>
+          )}
+        />
+
+        <section className="space-y-6">
+          <div className="mb-9 space-y-1">
+            <h2 className="sub-header">Zustimmung und Datenschutz</h2>
+          </div>
+
+          <CustomFormField
+            fieldType={FormFieldType.CHECKBOX}
+            control={form.control}
+            name="treatmentConsent"
+            label="Ich stimme der Behandlung zu."
+          />
+          <CustomFormField
+            fieldType={FormFieldType.CHECKBOX}
+            control={form.control}
+            name="disclosureConsent"
+            label="Ich stimme der Offenlegung meiner Daten zu."
+          />
+          <CustomFormField
+            fieldType={FormFieldType.CHECKBOX}
+            control={form.control}
+            name="privacyConsent"
+            label="Ich bin einverstanden, dass meine Daten gemäß den Datenschutzrichtlinien verwendet werden."
+          />
+        </section>
 
         <SubmitButton isLoading={isLoading}>Los geht's!</SubmitButton>
       </form>
