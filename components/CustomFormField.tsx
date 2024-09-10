@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-import { Control, FieldValues } from "react-hook-form";
+import { Control, FieldValues, Form } from "react-hook-form";
 import { FormFieldType } from "./forms/PatientForm";
 import Image from "next/image";
 import "react-phone-number-input/style.css";
@@ -27,7 +27,10 @@ import {
   SelectItem,
   SelectSeparator,
 } from "@/components/ui/select";
+import { Textarea } from "./ui/textarea";
+// import { Checkbox } from "@radix-ui/react-checkbox";
 
+import { Checkbox } from "./ui/checkbox";
 interface CustomProps {
   control: Control<any>;
   fieldType: FormFieldType;
@@ -76,6 +79,17 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
           </FormControl>
           <Input {...field} placeholder={placeholder} className="flex-1" />
         </div>
+      );
+    case FormFieldType.TEXTAREA:
+      return (
+        <FormControl>
+          <Textarea
+            placeholder={placeholder}
+            {...field}
+            className="shad-textArea"
+            disabled={props.disabled}
+          />
+        </FormControl>
       );
     case FormFieldType.PHONE_INPUT:
       return (
@@ -137,6 +151,21 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
       );
     case FormFieldType.SKELETON:
       return renderSkeleton ? renderSkeleton(field) : null;
+    case FormFieldType.CHECKBOX:
+      return (
+        <FormControl>
+          <div className="flex items-center gap-4">
+            <Checkbox
+              id={props.name}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+            />
+            <label htmlFor={props.name} className="checkbox-label">
+              {props.label}
+            </label>
+          </div>
+        </FormControl>
+      );
     default:
       return null;
   }
