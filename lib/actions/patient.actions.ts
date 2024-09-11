@@ -73,13 +73,14 @@ export const registerPatient = async ({
 
       file = await storage.createFile(BUCKET_ID!, ID.unique(), inputFile);
     }
-    console.log({
-      identificationDocumentId: file?.$id ? file.$id : null,
-      identificationDocumentUrl: file?.$id
-        ? `${ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${file.$id}/view??project=${PROJECT_ID}`
-        : null,
-      ...patient,
-    });
+    // console.log({
+    //   identificationDocumentId: file?.$id ? file.$id : null,
+    //   identificationDocumentUrl: file?.$id
+    //     ? `${ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${file.$id}/view??project=${PROJECT_ID}`
+    //     : null,
+    //   ...patient,
+    // });
+
     // Create new patient document -> https://appwrite.io/docs/references/cloud/server-nodejs/databases#createDocument
     const newPatient = await databases.createDocument(
       DATABASE_ID!,
