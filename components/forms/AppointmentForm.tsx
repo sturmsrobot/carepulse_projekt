@@ -1,12 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "@/components/ui/form";
 import CustomFormField from "../CustomFormField";
 import SubmitButton from "../ui/SubmitButton";
-import { useReducer, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { UserFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { createUser } from "@/lib/actions/patient.actions";
@@ -14,18 +14,23 @@ import { FormFieldType } from "./PatientForm";
 import { Doctors } from "@/constants";
 import { SelectItem } from "@radix-ui/react-select";
 import Image from "next/image";
+import "react-datepicker/dist/react-datepicker.css";
 
 const AppointmentForm = ({
   userId,
   patientId,
-  type,
-}: {
+  type = "create",
+}: // appointment,
+// setOpen,
+{
   userId: string;
   patientId: string;
-  type: "create" | "cancel";
+  type: "create" | "schedule" | "cancel";
+  // appointment?: Appointment;
+  // setOpen?: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof UserFormValidation>>({
     resolver: zodResolver(UserFormValidation),
@@ -93,10 +98,50 @@ const AppointmentForm = ({
               showTimeSelect
               dateFormat="dd.MM.yyyy - HH:mm"
             />
+            <div
+              className={`flex flex-col gap-6  ${
+                type === "create" && "xl:flex-row"
+              }`}
+            >
+              <CustomFormField
+                fieldType={FormFieldType.TEXTAREA}
+                control={form.control}
+                name="reason"
+                label="Grund für den Termin"
+                placeholder="Jährliche | monatliche Untersuchung"
+                disabled={type === "schedule"}
+              />
+
+              <CustomFormField
+                fieldType={FormFieldType.TEXTAREA}
+                control={form.control}
+                name="note"
+                label="Kommentare | Notizen"
+                placeholder="Bevorzuge nachmittags Termine, wenn möglich"
+                disabled={type === "schedule"}
+              />
+            </div>
           </>
         )}
 
-        <SubmitButton isLoading={isLoading}>Los geht's!</SubmitButton>
+        {type === "cancel" && (
+          <CustomFormField
+            fieldType={FormFieldType.TEXTAREA}
+            control={form.control}
+            name="cancellationReason"
+            label="Grund der Terminabsage"
+            placeholder="Dringendes Geschäftstreffen"
+          />
+        )}
+
+        <SubmitButton
+          isLoading={isLoading}
+          className={`${
+            type === "cancel" ? "shad-danger-btn" : "shad-primary-btn"
+          } w-full`}
+        >
+          Los geht's!
+        </SubmitButton>
       </form>
     </Form>
   );
