@@ -8,6 +8,7 @@ import CustomFormField from "../CustomFormField";
 import SubmitButton from "../ui/SubmitButton";
 import { Dispatch, SetStateAction, useState } from "react";
 import { UserFormValidation } from "@/lib/validation";
+import { AppointmentFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { createUser } from "@/lib/actions/patient.actions";
 import { FormFieldType } from "./PatientForm";
@@ -19,42 +20,103 @@ import "react-datepicker/dist/react-datepicker.css";
 const AppointmentForm = ({
   userId,
   patientId,
-  type = "create",
-}: // appointment,
-// setOpen,
-{
+  type,
+}: {
   userId: string;
   patientId: string;
   type: "create" | "schedule" | "cancel";
-  // appointment?: Appointment;
-  // setOpen?: Dispatch<SetStateAction<boolean>>;
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<z.infer<typeof UserFormValidation>>({
-    resolver: zodResolver(UserFormValidation),
+  const form = useForm<z.infer<typeof AppointmentFormValidation>>({
+    resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
+      primaryPhysician: appointment ? appointment?.primaryPhysician : "",
+      schedule: appointment
+        ? new Date(appointment?.schedule!)
+        : new Date(Date.now()),
+      reason: appointment ? appointment.reason : "",
+      note: appointment?.note || "",
+      cancellationReason: appointment?.cancellationReason || "",
     },
   });
 
-  async function onSubmit({
-    name,
-    email,
-    phone,
-  }: z.infer<typeof UserFormValidation>) {
+  const onSubmit = async (
+    values: z.infer<typeof AppointmentFormValidation>
+  ) => {
     setIsLoading(true);
 
+    let status;
+    switch (type) {
+      case "schedule":
+        status = "scheduled";
+        break;
+      case "cancel":
+        status = "cancelled";
+        break;
+      default:
+        status = "pending";
+    }
+
     try {
-      const userData = { name, email, phone };
-      const user = await createUser(userData);
-      if (user) router.push(`/patients/${user.$id}/register`);
+      if (type === "create" && patientId) {
+        const appointment = {
+          userId,
+          patient: patientId,
+          primaryPhysician: values.primaryPhysician,
+          schedule: new Date(values.schedule),
+          reason: values.reason!,
+          status: status as Status,
+          note: values.note,
+        };
+
+        const newAppointment = await createAppointment(appointment);
+
+        if (newAppointment) {
+          form.reset();
+          router.push(
+            `/patients/${userId}/new-appointment/success?appointmentId=${newAppointment.$id}`
+          );
+        }
+      } else {
+        const appointmentToUpdate = {
+          userId,
+          appointmentId: appointment?.$id!,
+          appointment: {
+            primaryPhysician: values.primaryPhysician,
+            schedule: new Date(values.schedule),
+            status: status as Status,
+            cancellationReason: values.cancellationReason,
+          },
+          type,
+        };
+
+        const updatedAppointment = await updateAppointment(appointmentToUpdate);
+
+        if (updatedAppointment) {
+          setOpen && setOpen(false);
+          form.reset();
+        }
+      }
     } catch (error) {
       console.log(error);
     }
+    setIsLoading(false);
+  };
+
+  let buttonLabel;
+
+  switch (type) {
+    case "cancel":
+      buttonLabel = "Termin absagen";
+      break;
+    case "create":
+      buttonLabel = "Termin anlegen";
+    case "schedule":
+      buttonLabel = "Termin planen";
+    default:
+      break;
   }
 
   return (
@@ -99,7 +161,7 @@ const AppointmentForm = ({
               dateFormat="dd.MM.yyyy - HH:mm"
             />
             <div
-              className={`flex flex-col gap-6  ${
+              className={`flex flex-col gap-6 xl_flex-row  ${
                 type === "create" && "xl:flex-row"
               }`}
             >
@@ -140,7 +202,7 @@ const AppointmentForm = ({
             type === "cancel" ? "shad-danger-btn" : "shad-primary-btn"
           } w-full`}
         >
-          Los geht's!
+          {buttonLabel}
         </SubmitButton>
       </form>
     </Form>
