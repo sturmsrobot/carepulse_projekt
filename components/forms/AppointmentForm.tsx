@@ -7,27 +7,36 @@ import { Form } from "@/components/ui/form";
 import CustomFormField from "../CustomFormField";
 import SubmitButton from "../ui/SubmitButton";
 import { Dispatch, SetStateAction, useState } from "react";
-import { UserFormValidation } from "@/lib/validation";
-import { AppointmentFormValidation } from "@/lib/validation";
+import { getAppointmentSchema } from "@/lib/validation";
 import { useRouter } from "next/navigation";
-import { createUser } from "@/lib/actions/patient.actions";
+import {
+  createAppointment,
+  updateAppointment,
+} from "@/lib/actions/appointment.actions";
 import { FormFieldType } from "./PatientForm";
 import { Doctors } from "@/constants";
 import { SelectItem } from "@radix-ui/react-select";
 import Image from "next/image";
 import "react-datepicker/dist/react-datepicker.css";
+import { Appointment, Status } from "@/types/appwrite.types";
 
 const AppointmentForm = ({
   userId,
   patientId,
   type,
+  appointment,
+  setOpen,
 }: {
   userId: string;
   patientId: string;
   type: "create" | "schedule" | "cancel";
+  appointment?: Appointment;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
+  const AppointmentFormValidation = getAppointmentSchema(type);
 
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
     resolver: zodResolver(AppointmentFormValidation),
@@ -47,7 +56,7 @@ const AppointmentForm = ({
   ) => {
     setIsLoading(true);
 
-    let status;
+    let status: Status;
     switch (type) {
       case "schedule":
         status = "scheduled";
@@ -61,7 +70,9 @@ const AppointmentForm = ({
 
     try {
       if (type === "create" && patientId) {
-        const appointment = {
+        console.log("ICH BIN HIER!");
+
+        const newAppointmentData = {
           userId,
           patient: patientId,
           primaryPhysician: values.primaryPhysician,
@@ -71,7 +82,7 @@ const AppointmentForm = ({
           note: values.note,
         };
 
-        const newAppointment = await createAppointment(appointment);
+        const newAppointment = await createAppointment(newAppointmentData);
 
         if (newAppointment) {
           form.reset();
@@ -79,7 +90,7 @@ const AppointmentForm = ({
             `/patients/${userId}/new-appointment/success?appointmentId=${newAppointment.$id}`
           );
         }
-      } else {
+      } else if (appointment) {
         const appointmentToUpdate = {
           userId,
           appointmentId: appointment?.$id!,
@@ -100,7 +111,7 @@ const AppointmentForm = ({
         }
       }
     } catch (error) {
-      console.log(error);
+      console.error("Fehler beim Verarbeiten des Termins: ", error);
     }
     setIsLoading(false);
   };
@@ -112,20 +123,23 @@ const AppointmentForm = ({
       buttonLabel = "Termin absagen";
       break;
     case "create":
-      buttonLabel = "Termin anlegen";
+      buttonLabel = "Termin erstellen";
     case "schedule":
-      buttonLabel = "Termin planen";
-    default:
+      buttonLabel = "Termin buchen";
       break;
+    default:
+      buttonLabel = "Absenden";
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex-1">
-        <section className="mb-12 space-y-4">
-          <h1 className="header">Neuer Termin</h1>
-          <p className="text-dark-700">Einen neuen Termin anfordern!</p>
-        </section>
+        {type === "create" && (
+          <section className="mb-12 space-y-4">
+            <h1 className="header">Neuer Termin</h1>
+            <p className="text-dark-700">Einen neuen Termin anfordern!</p>
+          </section>
+        )}
 
         {type !== "cancel" && (
           <>
@@ -160,6 +174,7 @@ const AppointmentForm = ({
               showTimeSelect
               dateFormat="dd.MM.yyyy - HH:mm"
             />
+
             <div
               className={`flex flex-col gap-6 xl_flex-row  ${
                 type === "create" && "xl:flex-row"
