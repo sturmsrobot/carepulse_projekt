@@ -11,15 +11,15 @@ import { getAppointmentSchema } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import {
   createAppointment,
-  updateAppointment,
+  // updateAppointment,
 } from "@/lib/actions/appointment.actions";
 import { FormFieldType } from "./PatientForm";
 import { Doctors } from "@/constants";
 import { SelectItem } from "@radix-ui/react-select";
 import Image from "next/image";
 import "react-datepicker/dist/react-datepicker.css";
-import { Appointment, Status } from "@/types/appwrite.types";
-
+import { Appointment } from "@/types/appwrite.types";
+// Status
 const AppointmentForm = ({
   userId,
   patientId,
@@ -124,6 +124,7 @@ const AppointmentForm = ({
       break;
     case "create":
       buttonLabel = "Termin erstellen";
+      break;
     case "schedule":
       buttonLabel = "Termin buchen";
       break;
