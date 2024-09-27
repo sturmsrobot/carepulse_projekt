@@ -3,52 +3,55 @@ import { z } from "zod";
 export const UserFormValidation = z.object({
   name: z
     .string()
-    .min(2, "Name must be at least 2 characters")
-    .max(50, "Name must be at most 50 characters"),
-  email: z.string().email("Invalid email address"),
+    .min(2, "Der Name muss mindestens 2 Zeichen lang sein")
+    .max(50, "Der Name darf höchstens 50 Zeichen lang sein"),
+  email: z.string().email("Ungültige E-Mail-Adresse"),
   phone: z
     .string()
-    .refine((phone) => /^\+\d{10,15}$/.test(phone), "Invalid phone number"),
+    .refine((phone) => /^\+\d{10,15}$/.test(phone), "Ungültige Telefonnummer"),
 });
 
 export const PatientFormValidation = z.object({
   name: z
     .string()
-    .min(2, "Name must be at least 2 characters")
-    .max(50, "Name must be at most 50 characters"),
-  email: z.string().email("Invalid email address"),
+    .min(2, "Der Name muss mindestens 2 Zeichen lang sein")
+    .max(50, "Der Name darf höchstens 50 Zeichen lang sein"),
+  email: z.string().email("Ungültige E-Mail-Adresse"),
   phone: z
     .string()
-    .refine((phone) => /^\+\d{10,15}$/.test(phone), "Invalid phone number"),
+    .refine((phone) => /^\+\d{10,15}$/.test(phone), "Ungültige Telefonnummer"),
   birthDate: z.coerce.date(),
   gender: z.enum(["Männlich", "Weiblich"]),
   address: z
     .string()
-    .min(5, "Address must be at least 5 characters")
-    .max(500, "Address must be at most 500 characters"),
+    .min(5, "Die Adresse muss mindestens 5 Zeichen lang sein")
+    .max(500, "Die Adresse darf höchstens 500 Zeichen lang sein"),
   occupation: z
     .string()
-    .min(2, "Occupation must be at least 2 characters")
-    .max(500, "Occupation must be at most 500 characters"),
+    .min(2, "Der Beruf muss mindestens 2 Zeichen lang sein")
+    .max(500, "Der Beruf darf höchstens 500 Zeichen lang sein"),
   emergencyContactName: z
     .string()
-    .min(2, "Contact name must be at least 2 characters")
-    .max(50, "Contact name must be at most 50 characters"),
+    .min(2, "Der Name des Notfallkontakts muss mindestens 2 Zeichen lang sein")
+    .max(
+      50,
+      "Der Name des Notfallkontakts darf höchstens 50 Zeichen lang sein"
+    ),
   emergencyContactNumber: z
     .string()
     .refine(
       (emergencyContactNumber) => /^\+\d{10,15}$/.test(emergencyContactNumber),
-      "Invalid phone number"
+      "Ungültige Telefonnummer"
     ),
-  primaryPhysician: z.string().min(2, "Select at least one doctor"),
+  primaryPhysician: z.string().min(2, "Wählen Sie mindestens einen Arzt aus"),
   insuranceProvider: z
     .string()
-    .min(2, "Insurance name must be at least 2 characters")
-    .max(50, "Insurance name must be at most 50 characters"),
+    .min(2, "Der Versicherungsname muss mindestens 2 Zeichen lang sein")
+    .max(50, "Der Versicherungsname darf höchstens 50 Zeichen lang sein"),
   insurancePolicyNumber: z
     .string()
-    .min(2, "Policy number must be at least 2 characters")
-    .max(50, "Policy number must be at most 50 characters"),
+    .min(2, "Die Policennummer muss mindestens 2 Zeichen lang sein")
+    .max(50, "Die Policennummer darf höchstens 50 Zeichen lang sein"),
   allergies: z.string().optional(),
   currentMedication: z.string().optional(),
   familyMedicalHistory: z.string().optional(),
@@ -60,35 +63,36 @@ export const PatientFormValidation = z.object({
     .boolean()
     .default(false)
     .refine((value) => value === true, {
-      message: "You must consent to treatment in order to proceed",
+      message: "Sie müssen der Behandlung zustimmen, um fortzufahren",
     }),
   disclosureConsent: z
     .boolean()
     .default(false)
     .refine((value) => value === true, {
-      message: "You must consent to disclosure in order to proceed",
+      message: "Sie müssen der Offenlegung zustimmen, um fortzufahren",
     }),
   privacyConsent: z
     .boolean()
     .default(false)
     .refine((value) => value === true, {
-      message: "You must consent to privacy in order to proceed",
+      message:
+        "Sie müssen der Datenschutzrichtlinie zustimmen, um fortzufahren",
     }),
 });
 
 export const CreateAppointmentSchema = z.object({
-  primaryPhysician: z.string().min(2, "Select at least one doctor"),
+  primaryPhysician: z.string().min(2, "Wählen Sie mindestens einen Arzt aus"),
   schedule: z.coerce.date(),
   reason: z
     .string()
-    .min(2, "Reason must be at least 2 characters")
-    .max(500, "Reason must be at most 500 characters"),
+    .min(2, "Der Grund muss mindestens 2 Zeichen lang sein")
+    .max(500, "Der Grund darf höchstens 500 Zeichen lang sein"),
   note: z.string().optional(),
   cancellationReason: z.string().optional(),
 });
 
 export const ScheduleAppointmentSchema = z.object({
-  primaryPhysician: z.string().min(2, "Select at least one doctor"),
+  primaryPhysician: z.string().min(2, "Wählen Sie mindestens einen Arzt aus"),
   schedule: z.coerce.date(),
   reason: z.string().optional(),
   note: z.string().optional(),
@@ -96,14 +100,14 @@ export const ScheduleAppointmentSchema = z.object({
 });
 
 export const CancelAppointmentSchema = z.object({
-  primaryPhysician: z.string().min(2, "Select at least one doctor"),
+  primaryPhysician: z.string().min(2, "Wählen Sie mindestens einen Arzt aus"),
   schedule: z.coerce.date(),
   reason: z.string().optional(),
   note: z.string().optional(),
   cancellationReason: z
     .string()
-    .min(2, "Reason must be at least 2 characters")
-    .max(500, "Reason must be at most 500 characters"),
+    .min(2, "Der Grund muss mindestens 2 Zeichen lang sein")
+    .max(500, "Der Grund darf höchstens 500 Zeichen lang sein"),
 });
 
 export function getAppointmentSchema(type: string) {
