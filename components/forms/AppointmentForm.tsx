@@ -1,29 +1,32 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Form } from "@/components/ui/form";
-import CustomFormField from "../CustomFormField";
-import SubmitButton from "../ui/SubmitButton";
-import { Dispatch, SetStateAction, useState } from "react";
-import { getAppointmentSchema } from "@/lib/validation";
-import { useRouter } from "next/navigation";
+
+import { SelectItem } from "@radix-ui/react-select";
+import { Doctors } from "@/constants";
 import {
   createAppointment,
   // updateAppointment,
 } from "@/lib/actions/appointment.actions";
-import { FormFieldType } from "./PatientForm";
-import { Doctors } from "@/constants";
-import { SelectItem } from "@radix-ui/react-select";
-import Image from "next/image";
-import "react-datepicker/dist/react-datepicker.css";
+import { getAppointmentSchema } from "@/lib/validation";
 import { Appointment } from "@/types/appwrite.types";
-// Status
+
+import "react-datepicker/dist/react-datepicker.css";
+
+import CustomFormField from "../CustomFormField";
+import { FormFieldType } from "./PatientForm";
+import SubmitButton from "../ui/SubmitButton";
+import { Form } from "@/components/ui/form";
+
 const AppointmentForm = ({
   userId,
   patientId,
-  type,
+  type = "create",
   appointment,
   setOpen,
 }: {
@@ -41,22 +44,25 @@ const AppointmentForm = ({
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-      primaryPhysician: appointment ? appointment?.primaryPhysician : "",
+      primaryPhysician: appointment?.primaryPhysician || "",
       schedule: appointment
         ? new Date(appointment?.schedule!)
         : new Date(Date.now()),
-      reason: appointment ? appointment.reason : "",
+      reason: appointment?.reason || "",
       note: appointment?.note || "",
       cancellationReason: appointment?.cancellationReason || "",
     },
   });
+  console.log("Appointment:", appointment);
+  console.log("Doctors:", Doctors);
+  console.log("Default Values:", form.getValues());
 
   const onSubmit = async (
     values: z.infer<typeof AppointmentFormValidation>
   ) => {
     setIsLoading(true);
 
-    let status: Status;
+    let status;
     switch (type) {
       case "schedule":
         status = "scheduled";
@@ -70,8 +76,6 @@ const AppointmentForm = ({
 
     try {
       if (type === "create" && patientId) {
-        console.log("ICH BIN HIER!");
-
         const newAppointmentData = {
           userId,
           patient: patientId,

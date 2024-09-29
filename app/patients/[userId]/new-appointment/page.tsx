@@ -1,12 +1,9 @@
-import AppointmentForm from "@/components/forms/AppointmentForm";
-import PatientForm from "@/components/forms/PatientForm";
-import { getPatient } from "@/lib/actions/patient.actions";
 import Image from "next/image";
-import Link from "next/link";
 
-export default async function NewAppointment({
-  params: { userId },
-}: SearchParamProps) {
+import AppointmentForm from "@/components/forms/AppointmentForm";
+import { getPatient } from "@/lib/actions/patient.actions";
+
+const Appointment = async ({ params: { userId } }: SearchParamProps) => {
   const patient = await getPatient(userId);
   return (
     <div className="flex h-screen max-h-screen">
@@ -28,6 +25,7 @@ export default async function NewAppointment({
           <p className="copyright mt-10 py-12">© 2024 CarePulse</p>
         </div>
       </section>
+
       <Image
         src="/assets/images/appointment-img.png"
         height={1000}
@@ -37,4 +35,6 @@ export default async function NewAppointment({
       />
     </div>
   );
-}
+};
+
+export default Appointment;

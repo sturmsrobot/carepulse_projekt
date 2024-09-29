@@ -28,9 +28,9 @@ import {
   SelectSeparator,
 } from "@/components/ui/select";
 import { Textarea } from "./ui/textarea";
-// import { Checkbox } from "@radix-ui/react-checkbox";
-
 import { Checkbox } from "./ui/checkbox";
+import { Controller } from "react-hook-form";
+
 interface CustomProps {
   control: Control<any>;
   fieldType: FormFieldType;
