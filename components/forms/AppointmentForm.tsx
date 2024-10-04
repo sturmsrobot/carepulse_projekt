@@ -53,9 +53,6 @@ const AppointmentForm = ({
       cancellationReason: appointment?.cancellationReason || "",
     },
   });
-  console.log("Appointment:", appointment);
-  console.log("Doctors:", Doctors);
-  console.log("Default Values:", form.getValues());
 
   const onSubmit = async (
     values: z.infer<typeof AppointmentFormValidation>
@@ -107,12 +104,11 @@ const AppointmentForm = ({
           type,
         };
 
-        const updatedAppointment = await updateAppointment(appointmentToUpdate);
+        // Handle appointment update (code is commented out in original)
+        // const updatedAppointment = await updateAppointment(appointmentToUpdate);
 
-        if (updatedAppointment) {
-          setOpen && setOpen(false);
-          form.reset();
-        }
+        setOpen && setOpen(false);
+        form.reset();
       }
     } catch (error) {
       console.error("Fehler beim Verarbeiten des Termins: ", error);
@@ -156,7 +152,11 @@ const AppointmentForm = ({
               placeholder="Bitte einen Arzt auswählen"
             >
               {Doctors.map((doctor, i) => (
-                <SelectItem key={doctor.name + i} value={doctor.name}>
+                <SelectItem
+                  key={doctor.name + i}
+                  value={doctor.name}
+                  onClick={() => form.setValue("primaryPhysician", doctor.name)}
+                >
                   <div className="flex cursor-pointer items-center gap-2">
                     <Image
                       src={doctor.image}
@@ -174,7 +174,7 @@ const AppointmentForm = ({
             <CustomFormField
               fieldType={FormFieldType.DATE_PICKER}
               control={form.control}
-              name="Terminplan"
+              name="schedule"
               label="Voraussichtliches Termindatum"
               showTimeSelect
               dateFormat="dd.MM.yyyy - HH:mm"

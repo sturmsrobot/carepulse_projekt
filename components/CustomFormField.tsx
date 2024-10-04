@@ -1,8 +1,8 @@
-"use client";
+/* eslint-disable no-unused-vars */
 
+import { E164Number } from "libphonenumber-js/core";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -10,8 +10,7 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-import { Control, FieldValues, Form } from "react-hook-form";
-import { FormFieldType } from "./forms/PatientForm";
+import { Control } from "react-hook-form";
 import Image from "next/image";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
@@ -24,12 +23,19 @@ import {
   SelectTrigger,
   SelectContent,
   SelectValue,
-  SelectItem,
-  SelectSeparator,
 } from "@/components/ui/select";
 import { Textarea } from "./ui/textarea";
 import { Checkbox } from "./ui/checkbox";
-import { Controller } from "react-hook-form";
+
+export enum FormFieldType {
+  INPUT = "input",
+  TEXTAREA = "textarea",
+  PHONE_INPUT = "phoneInput",
+  CHECKBOX = "checkbox",
+  DATE_PICKER = "datePicker",
+  SELECT = "select",
+  SKELETON = "skeleton",
+}
 
 interface CustomProps {
   control: Control<any>;
