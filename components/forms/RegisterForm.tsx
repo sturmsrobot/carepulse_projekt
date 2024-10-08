@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
 import { Form, FormControl } from "@/components/ui/form";
 import { Label } from "@radix-ui/react-label";
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
@@ -16,11 +17,14 @@ import {
   IdentificationTypes,
   PatientFormDefaultValues,
 } from "@/constants";
-import CustomFormField from "../CustomFormField";
-import SubmitButton from "../ui/SubmitButton";
-import { PatientFormValidation, UserFormValidation } from "@/lib/validation";
 import { registerPatient } from "@/lib/actions/patient.actions";
+import { PatientFormValidation } from "@/lib/validation";
+
+import "react-datepicker/dist/react-datepicker.css";
+import "react-phone-number-input/style.css";
+import CustomFormField from "../CustomFormField";
 import { FormFieldType } from "./PatientForm";
+import SubmitButton from "../ui/SubmitButton";
 import FileUploader from "../FileUploader";
 
 const RegisterForm = ({ user }: { user: User }) => {
