@@ -44,10 +44,8 @@ const AppointmentForm = ({
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-      // primaryPhysician: Doctors[0].name,
-      schedule: appointment
-        ? new Date(appointment?.schedule!)
-        : new Date(Date.now()),
+      primaryPhysician: appointment?.primaryPhysician || Doctors[0]?.name || "",
+      schedule: appointment ? new Date(appointment?.schedule!) : new Date(),
       reason: appointment?.reason || "",
       note: appointment?.note || "",
       cancellationReason: appointment?.cancellationReason || "",
@@ -59,7 +57,7 @@ const AppointmentForm = ({
   ) => {
     setIsLoading(true);
 
-    let status;
+    let status: Status;
     switch (type) {
       case "schedule":
         status = "scheduled";
@@ -76,7 +74,7 @@ const AppointmentForm = ({
         const newAppointmentData = {
           userId,
           patient: patientId,
-          primaryPhysician: Doctors[0].name,
+          primaryPhysician: values.primaryPhysician || Doctors[0].name,
           schedule: new Date(values.schedule),
           reason: values.reason!,
           status: status as Status,
@@ -94,9 +92,9 @@ const AppointmentForm = ({
       } else if (appointment) {
         const appointmentToUpdate = {
           userId,
-          appointmentId: appointment?.$id!,
+          appointmentId: appointment.$id!,
           appointment: {
-            primaryPhysician: Doctors[0].name,
+            primaryPhysician: values.primaryPhysician || Doctors[0].name,
             schedule: new Date(values.schedule),
             status: status as Status,
             cancellationReason: values.cancellationReason,
@@ -104,20 +102,21 @@ const AppointmentForm = ({
           type,
         };
 
-        // Handle appointment update (code is commented out in original)
         // const updatedAppointment = await updateAppointment(appointmentToUpdate);
 
-        setOpen && setOpen(false);
-        form.reset();
+        if (updatedAppointment) {
+          setOpen && setOpen(false);
+          form.reset();
+        }
       }
     } catch (error) {
-      console.error("Fehler beim Verarbeiten des Termins: ", error);
+      console.error("Fehler beim Verarbeiten des Termins:", error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   let buttonLabel;
-
   switch (type) {
     case "cancel":
       buttonLabel = "Termin absagen";
@@ -131,9 +130,6 @@ const AppointmentForm = ({
     default:
       buttonLabel = "Absenden";
   }
-  function test() {
-    console.log("hello world");
-  }
 
   return (
     <Form {...form}>
@@ -145,7 +141,6 @@ const AppointmentForm = ({
           </section>
         )}
 
-        {/* {type !== "cancel" && ( */}
         <>
           <CustomFormField
             fieldType={FormFieldType.SELECT}
@@ -170,17 +165,8 @@ const AppointmentForm = ({
             ))}
           </CustomFormField>
 
-          {/* <CustomFormField
-              fieldType={FormFieldType.DATE_PICKER}
-              control={form.control}
-              name="schedule"
-              label="Voraussichtliches Termindatum"
-              showTimeSelect
-              dateFormat="dd.MM.yyyy - HH:mm"
-            /> */}
-
           <div
-            className={`flex flex-col gap-6 xl_flex-row  ${
+            className={`flex flex-col gap-6 ${
               type === "create" && "xl:flex-row"
             }`}
           >
@@ -203,7 +189,6 @@ const AppointmentForm = ({
             />
           </div>
         </>
-        {/* )} */}
 
         {type === "cancel" && (
           <CustomFormField
