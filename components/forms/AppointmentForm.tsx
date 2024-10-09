@@ -44,7 +44,7 @@ const AppointmentForm = ({
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-      primaryPhysician: appointment?.primaryPhysician || "",
+      // primaryPhysician: Doctors[0].name,
       schedule: appointment
         ? new Date(appointment?.schedule!)
         : new Date(Date.now()),
@@ -76,7 +76,7 @@ const AppointmentForm = ({
         const newAppointmentData = {
           userId,
           patient: patientId,
-          primaryPhysician: values.primaryPhysician,
+          primaryPhysician: Doctors[0].name,
           schedule: new Date(values.schedule),
           reason: values.reason!,
           status: status as Status,
@@ -96,7 +96,7 @@ const AppointmentForm = ({
           userId,
           appointmentId: appointment?.$id!,
           appointment: {
-            primaryPhysician: values.primaryPhysician,
+            primaryPhysician: Doctors[0].name,
             schedule: new Date(values.schedule),
             status: status as Status,
             cancellationReason: values.cancellationReason,
@@ -131,6 +131,9 @@ const AppointmentForm = ({
     default:
       buttonLabel = "Absenden";
   }
+  function test() {
+    console.log("hello world");
+  }
 
   return (
     <Form {...form}>
@@ -142,69 +145,65 @@ const AppointmentForm = ({
           </section>
         )}
 
-        {type !== "cancel" && (
-          <>
-            <CustomFormField
-              fieldType={FormFieldType.SELECT}
-              control={form.control}
-              name="primaryPhysician"
-              label="Arzt"
-              placeholder="Bitte einen Arzt auswählen"
-            >
-              {Doctors.map((doctor, i) => (
-                <SelectItem
-                  key={doctor.name + i}
-                  value={doctor.name}
-                  onClick={() => form.setValue("primaryPhysician", doctor.name)}
-                >
-                  <div className="flex cursor-pointer items-center gap-2">
-                    <Image
-                      src={doctor.image}
-                      width={32}
-                      height={32}
-                      alt="doctor"
-                      className="rounded-full border border-dark-500"
-                    />
-                    <p>{doctor.name}</p>
-                  </div>
-                </SelectItem>
-              ))}
-            </CustomFormField>
+        {/* {type !== "cancel" && ( */}
+        <>
+          <CustomFormField
+            fieldType={FormFieldType.SELECT}
+            control={form.control}
+            name="primaryPhysician"
+            label="Arzt"
+            placeholder="Bitte einen Arzt auswählen"
+          >
+            {Doctors.map((doctor, i) => (
+              <SelectItem key={doctor.name + i} value={doctor.name}>
+                <div className="flex cursor-pointer items-center gap-2">
+                  <Image
+                    src={doctor.image}
+                    width={32}
+                    height={32}
+                    alt="doctor"
+                    className="rounded-full border border-dark-500"
+                  />
+                  <p>{doctor.name}</p>
+                </div>
+              </SelectItem>
+            ))}
+          </CustomFormField>
 
-            <CustomFormField
+          {/* <CustomFormField
               fieldType={FormFieldType.DATE_PICKER}
               control={form.control}
               name="schedule"
               label="Voraussichtliches Termindatum"
               showTimeSelect
               dateFormat="dd.MM.yyyy - HH:mm"
+            /> */}
+
+          <div
+            className={`flex flex-col gap-6 xl_flex-row  ${
+              type === "create" && "xl:flex-row"
+            }`}
+          >
+            <CustomFormField
+              fieldType={FormFieldType.TEXTAREA}
+              control={form.control}
+              name="reason"
+              label="Grund für den Termin"
+              placeholder="Jährliche | monatliche Untersuchung"
+              disabled={type === "schedule"}
             />
 
-            <div
-              className={`flex flex-col gap-6 xl_flex-row  ${
-                type === "create" && "xl:flex-row"
-              }`}
-            >
-              <CustomFormField
-                fieldType={FormFieldType.TEXTAREA}
-                control={form.control}
-                name="reason"
-                label="Grund für den Termin"
-                placeholder="Jährliche | monatliche Untersuchung"
-                disabled={type === "schedule"}
-              />
-
-              <CustomFormField
-                fieldType={FormFieldType.TEXTAREA}
-                control={form.control}
-                name="note"
-                label="Kommentare | Notizen"
-                placeholder="Bevorzuge nachmittags Termine, wenn möglich"
-                disabled={type === "schedule"}
-              />
-            </div>
-          </>
-        )}
+            <CustomFormField
+              fieldType={FormFieldType.TEXTAREA}
+              control={form.control}
+              name="note"
+              label="Kommentare | Notizen"
+              placeholder="Bevorzuge nachmittags Termine, wenn möglich"
+              disabled={type === "schedule"}
+            />
+          </div>
+        </>
+        {/* )} */}
 
         {type === "cancel" && (
           <CustomFormField
