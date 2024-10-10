@@ -250,6 +250,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             </SelectItem>
           ))}
         </CustomFormField>
+
         {/* VERSICHERUNG & VERSICHERTENNUMMER */}
         <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
