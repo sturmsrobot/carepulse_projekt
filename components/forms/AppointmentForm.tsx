@@ -1,53 +1,94 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Form } from "@/components/ui/form";
+
+import { SelectItem } from "../ui/select";
+import { Doctors } from "@/constants";
+import { createAppointment } from "@/lib/actions/appointment.actions";
+import { getAppointmentSchema } from "@/lib/validation";
+import { Appointment } from "@/types/appwrite.types";
+
+import "react-datepicker/dist/react-datepicker.css";
+
 import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../ui/SubmitButton";
-import { useState } from "react";
-import { UserFormValidation } from "@/lib/validation";
-import { useRouter } from "next/navigation";
-import { createUser } from "@/lib/actions/patient.actions";
-import { Doctors } from "@/constants";
-import { SelectItem } from "../ui/select";
-import Image from "next/image";
+import { Form } from "@/components/ui/form";
+import NewAppointment from "@/app/patients/[userId]/new-appointment/page";
 
 const AppointmentForm = ({
   userId,
   patientId,
-  type,
+  type = "create",
+  appointment,
 }: {
   userId: string;
   patientId: string;
   type: "create" | "cancel" | "schedule";
+  appointment?: Appointment;
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<z.infer<typeof UserFormValidation>>({
-    resolver: zodResolver(UserFormValidation),
+  const AppointmentFormValidation = getAppointmentSchema(type);
+
+  const form = useForm<z.infer<typeof AppointmentFormValidation>>({
+    resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
+      primaryPhysician: "",
+      schedule: new Date(),
+      reason: "",
+      note: "",
+      cancellationReason: "",
     },
   });
 
-  async function onSubmit({
-    name,
-    email,
-    phone,
-  }: z.infer<typeof UserFormValidation>) {
+  async function onSubmit(values: z.infer<typeof AppointmentFormValidation>) {
     setIsLoading(true);
 
+    let status: Status;
+    switch (type) {
+      case "schedule":
+        status = "scheduled";
+        break;
+      case "cancel":
+        status = "cancelled";
+        break;
+      default:
+        status = "pending";
+        break;
+    }
+
     try {
-      const userData = { name, email, phone };
-      const user = await createUser(userData);
-      if (user) router.push(`/patients/${user.$id}/register`);
+      if (type === "create" && patientId) {
+        console.log("ICH BIN HIER! CREATE!");
+        const newAppointmentData = {
+          userId,
+          patient: patientId,
+          primaryPhysician: values.primaryPhysician,
+          schedule: new Date(values.schedule),
+          reason: values.reason!,
+          note: values.note,
+          status: status as Status,
+        };
+        const newAppointment = await createAppointment(newAppointmentData);
+        console.log("Erstellter Termin:", newAppointment);
+
+        console.log("Appointment Data:", newAppointmentData);
+
+        if (newAppointment) {
+          form.reset();
+          router.push(
+            `/patients/${userId}/new-appointment/success?appointmentId=${newAppointment.$id}`
+          );
+        }
+      }
     } catch (error) {
-      console.log(error);
+      console.log("Fehler beim Verarbeiten des Termins:", error);
     }
   }
 
@@ -103,17 +144,17 @@ const AppointmentForm = ({
             <CustomFormField
               fieldType={FormFieldType.DATE_PICKER}
               control={form.control}
-              name="Terminplan"
+              name="schedule"
               label="Voraussichtliches Termindatum"
               showTimeSelect
               dateFormat="dd.MM.yyyy - HH:mm"
             />
 
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-6 xl:flex-row">
               <CustomFormField
                 fieldType={FormFieldType.TEXTAREA}
                 control={form.control}
-                name="Grund Anfrage"
+                name="reason"
                 label="Grund der Anfrage"
                 placeholder="Bitte geben Sie einen Grund für die Anfrage an"
               />
@@ -121,7 +162,7 @@ const AppointmentForm = ({
               <CustomFormField
                 fieldType={FormFieldType.TEXTAREA}
                 control={form.control}
-                name="Notizen"
+                name="note"
                 label="Notizen"
                 placeholder="Notizen"
               />
@@ -133,7 +174,7 @@ const AppointmentForm = ({
           <CustomFormField
             fieldType={FormFieldType.TEXTAREA}
             control={form.control}
-            name="Grund Absage"
+            name="cancellationReason"
             label="Grund der Absage"
             placeholder="Bitte geben Sie einen Grund für die Absage an"
           />

@@ -17,15 +17,14 @@ export default async function NewAppointment({
             alt="patient"
             className="mb-12 h-10 w-fit"
           />
+
           <AppointmentForm
             type="create"
             userId={userId}
-            patientID={patient.$id}
+            patientId={patient.$id}
           />
 
-          <p className="justify-items-end text-dark-600 xl:text-left">
-            © 2024 CarePulse
-          </p>
+          <p className="copyright mt-10 py-12">© 2024 CarePulse</p>
         </div>
       </section>
       <Image
