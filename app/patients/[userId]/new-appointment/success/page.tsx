@@ -69,7 +69,9 @@ const Success = async ({
         </section>
 
         <Button variant="outline" className="shad-primary-btn" asChild>
-          <Link href={`/patients/${userId}/new-appointment`}>Neuer Termin</Link>
+          <Link href={`/patients/${userId}/new-appointment`}>
+            weiteren Termin buchen
+          </Link>
         </Button>
 
         <p className="copyright">© 2024 CarePulse</p>
