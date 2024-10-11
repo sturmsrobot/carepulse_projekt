@@ -1,6 +1,6 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, RowExpanding } from "@tanstack/react-table";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +11,11 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { MoreHorizontal } from "lucide-react";
+import StatusBadge from "../StatusBadge";
+import { formatDateTime } from "@/lib/utils";
+import Image from "next/image";
+import { Doctors } from "@/constants";
+import { getPatient } from "@/lib/actions/patient.actions";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -22,6 +27,62 @@ export type Payment = {
 };
 
 export const columns: ColumnDef<Payment>[] = [
+  {
+    header: "ID",
+    cell: ({ row }) => <p className="text-14-medium">{row.index + 1}</p>,
+  },
+  {
+    accessorKey: "patient",
+    header: "Patient",
+    cell: ({ row }) => (
+      <p className="text-14-medium">
+        {row.original.patient?.name || "Kein Patient"}
+      </p>
+    ),
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <div className="min-w-[115px]">
+        <StatusBadge status={row.original.status} />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "schedule",
+    header: "Termin",
+    cell: ({ row }) => (
+      <p className="text-14-regular min-w-[100px]">
+        {formatDateTime(row.original.schedule).dateTime}
+      </p>
+    ),
+  },
+  {
+    accessorKey: "primaryPhysician",
+    header: () => "Facharzt",
+    cell: ({ row }) => {
+      const doctor = Doctors.find(
+        (doc) => doc.name === row.original.primaryPhysician
+      );
+      return (
+        <div className="flex items-center gap-3">
+          {doctor && (
+            <>
+              <Image
+                src={doctor.image}
+                alt={doctor.name}
+                height={32}
+                width={32}
+                className="rounded-full border border-dark-500"
+              />
+              <p className="whitespace-nowrap">Dr. {doctor.name}</p>
+            </>
+          )}
+        </div>
+      );
+    },
+  },
   {
     id: "actions",
     cell: ({ row }) => {
@@ -48,27 +109,6 @@ export const columns: ColumnDef<Payment>[] = [
           </DropdownMenuContent>
         </DropdownMenu>
       );
-    },
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
     },
   },
 ];
