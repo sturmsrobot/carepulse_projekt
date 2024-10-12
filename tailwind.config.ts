@@ -50,9 +50,9 @@ const config = {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
       backgroundImage: {
-        appointments: "url('/assets/images/appointments-bg.png')",
-        pending: "url('/assets/images/pending-bg.png')",
-        cancelled: "url('/assets/images/cancelled-bg.png')",
+        planen: "url('/assets/images/appointments-bg.png')",
+        erstellen: "url('/assets/images/pending-bg.png')",
+        absagen: "url('/assets/images/cancelled-bg.png')",
       },
       keyframes: {
         "accordion-down": {

@@ -18,7 +18,7 @@ const AppointmentModal = ({
   patientId,
   type,
   appointment,
-  setOpen, // Prop setOpen bleibt unverändert
+  setOpen,
 }: {
   userId: string;
   patientId: string;
@@ -26,20 +26,20 @@ const AppointmentModal = ({
   appointment?: Appointment;
   setOpen: (open: boolean) => void;
 }) => {
-  const [localOpen, setLocalOpen] = useState(false); // Lokale State-Variable umbenennen
+  const [open, setLocalOpen] = useState(false);
 
   const closeModal = () => {
-    setOpen(false); // setze das Modal über die Prop
-    setLocalOpen(false); // setze das lokale Modal ebenfalls auf false
+    setLocalOpen(false);
+    setOpen(false);
   };
 
   return (
-    <Dialog open={localOpen} onOpenChange={setLocalOpen}>
+    <Dialog open={open} onOpenChange={setLocalOpen}>
       <DialogTrigger asChild>
         <Button
           variant="ghost"
           className={`capitalize ${type === "planen" && "text-green-500"}`}
-          onClick={() => setLocalOpen(true)} // Lokales Modal öffnen
+          onClick={() => setLocalOpen(true)}
         >
           {type}
         </Button>
@@ -61,7 +61,7 @@ const AppointmentModal = ({
           patientId={patientId}
           type={type}
           appointment={appointment}
-          setOpen={closeModal} // Close Modal übergeben
+          setOpen={closeModal}
         />
       </DialogContent>
     </Dialog>

@@ -30,6 +30,7 @@ export const createAppointment = async (
       "Beim Erstellen eines neues Termins ist ein Fehler aufgetreten:",
       error
     );
+    return null;
   }
 };
 
@@ -70,11 +71,11 @@ export const getRecentAppointmentList = async () => {
 
     const counts = (appointments.documents as Appointment[]).reduce(
       (acc, appointment) => {
-        if (appointment.status === "scheduled") {
+        if (appointment.status === "planen") {
           acc.scheduledCount += 1;
-        } else if (appointment.status === "pending") {
+        } else if (appointment.status === "erstellen") {
           acc.pendingCount += 1;
-        } else if (appointment.status === "cancelled") {
+        } else if (appointment.status === "absagen") {
           acc.cancelledCount += 1;
         }
 

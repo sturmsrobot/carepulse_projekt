@@ -22,6 +22,8 @@ import CustomFormField, { FormFieldType } from "../CustomFormField";
 import SubmitButton from "../ui/SubmitButton";
 import { Form } from "@/components/ui/form";
 import NewAppointment from "@/app/patients/[userId]/new-appointment/page";
+import { Status } from "@/types/appwrite.types";
+import { StatusIcon } from "@/constants";
 
 const AppointmentForm = ({
   userId,
@@ -34,7 +36,7 @@ const AppointmentForm = ({
   patientId: string;
   type: "erstellen" | "planen" | "absagen";
   appointment?: Appointment;
-  setOpen: (open: boolean) => void;
+  setOpen?: (open: boolean) => void;
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -60,18 +62,21 @@ const AppointmentForm = ({
     let status: Status;
     switch (type) {
       case "planen":
-        status = "scheduled";
+        status = "planen"; // Erlaubter Status
         break;
       case "absagen":
-        status = "cancelled";
+        status = "absagen"; // Erlaubter Status
+        break;
+      case "erstellen":
+        status = "pending"; // Erlaubter Status für den Erstellungsvorgang
         break;
       default:
-        status = "pending";
-        break;
+        status = "pending"; // Fallback-Status
     }
 
     try {
       if (type === "erstellen" && patientId) {
+        // Neuer Termin wird erstellt
         const newAppointmentData = {
           userId,
           patient: patientId,
@@ -81,15 +86,20 @@ const AppointmentForm = ({
           note: values.note,
           status: status as Status,
         };
+        console.log("Submitting appointment data:", newAppointmentData);
+
         const newAppointment = await createAppointment(newAppointmentData);
 
         if (newAppointment) {
+          console.log("New appointment created:", newAppointment);
           form.reset();
           router.push(
             `/patients/${userId}/new-appointment/success?appointmentId=${newAppointment.$id}`
           );
+        } else {
+          console.error("Fehler: Der Termin konnte nicht erstellt werden.");
         }
-      } else {
+        //Termin aktualisieren
         const appointmentToUpdate = {
           userId,
           appointmentId: appointment?.$id!,

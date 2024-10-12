@@ -2,14 +2,15 @@ import { StatusIcon } from "@/constants";
 import clsx from "clsx";
 import Image from "next/image";
 import React from "react";
+import { Status } from "@/types/appwrite.types";
 
 const StatusBadge = ({ status }: { status: Status }) => {
   return (
     <div
       className={clsx("status-badge", {
-        "bg-green-600": status === "scheduled",
-        "bg-blue-600": status === "pending",
-        "bg-red-600": status === "cancelled",
+        "bg-green-600": status === "planen",
+        "bg-blue-600": status === "erstellen",
+        "bg-red-600": status === "absagen",
       })}
     >
       <Image
@@ -21,9 +22,9 @@ const StatusBadge = ({ status }: { status: Status }) => {
       />
       <p
         className={clsx("text-12-semibold capitalize", {
-          "text-green-500": status === "scheduled",
-          "text-blue-500": status === "pending",
-          "text-red-500": status === "cancelled",
+          "text-green-500": status === "planen",
+          "text-blue-500": status === "erstellen",
+          "text-red-500": status === "absagen",
         })}
       >
         {status}{" "}
