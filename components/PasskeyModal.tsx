@@ -1,6 +1,9 @@
 "use client";
 
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,15 +18,12 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-
-import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
 import { decryptKey, encryptKey } from "@/lib/utils";
 
-const PasskeyModal = () => {
+export const PasskeyModal = () => {
   const router = useRouter();
   const path = usePathname();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [passkey, setPasskey] = useState("");
   const [error, setError] = useState("");
 
@@ -33,16 +33,35 @@ const PasskeyModal = () => {
       : null;
 
   useEffect(() => {
-    const accessKey = encryptedKey && decryptKey(encryptedKey);
-    if (path) {
-      if (accessKey === process.env.NEXT_PUBLIC_ADMIN_PASSKEY) {
-        setOpen(false);
-        router.push("/admin");
-      } else {
-        setOpen(true);
-      }
+    // Zugangsschlüssel aus dem Session Storage abrufen
+    const storedData = sessionStorage.getItem("accessKey");
+
+    let accessKey;
+    try {
+      accessKey = storedData ? JSON.parse(storedData) : null;
+    } catch (error) {
+      accessKey = storedData; // Falls es kein JSON ist, behandle es als String
     }
-  }, [encryptedKey]);
+
+    // Entschlüssel den Schlüssel
+    const decryptedKey = accessKey ? decryptKey(accessKey) : null;
+
+    console.log("Access Key:", decryptedKey);
+    console.log("Expected Passkey:", process.env.NEXT_PUBLIC_ADMIN_PASSKEY);
+
+    // Wenn der Schlüssel stimmt, Admin-Seite öffnen
+    if (decryptedKey === process.env.NEXT_PUBLIC_ADMIN_PASSKEY) {
+      setOpen(false);
+      router.push("/admin");
+    } else {
+      setOpen(true);
+    }
+  }, [path]);
+
+  const closeModal = () => {
+    setOpen(false);
+    router.push("/");
+  };
 
   const validatePasskey = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -52,17 +71,14 @@ const PasskeyModal = () => {
     if (passkey === process.env.NEXT_PUBLIC_ADMIN_PASSKEY) {
       const encryptedKey = encryptKey(passkey);
 
-      localStorage.setItem("accessKey", encryptedKey);
+      // Speichere den verschlüsselten Schlüssel in der aktuellen Sitzung
+      sessionStorage.setItem("accessKey", JSON.stringify(encryptedKey));
 
       setOpen(false);
+      router.push("/admin");
     } else {
-      setError("Passkey ist falsch. Bitte versuchen Sie es erneut.");
+      setError("Ungültiger Passkey. Bitte versuchen Sie es erneut.");
     }
-  };
-
-  const closeModal = () => {
-    setOpen(false);
-    router.push("/");
   };
 
   return (
@@ -74,8 +90,8 @@ const PasskeyModal = () => {
             <Image
               src="/assets/icons/close.svg"
               alt="close"
-              height={20}
               width={20}
+              height={20}
               onClick={() => closeModal()}
               className="cursor-pointer"
             />
@@ -84,7 +100,6 @@ const PasskeyModal = () => {
             Um auf die Admin-Seite zuzugreifen, geben Sie bitte den Passkey ein
           </AlertDialogDescription>
         </AlertDialogHeader>
-
         <div>
           <InputOTP
             maxLength={6}
@@ -107,7 +122,6 @@ const PasskeyModal = () => {
             </p>
           )}
         </div>
-
         <AlertDialogFooter>
           <AlertDialogAction
             onClick={(e) => validatePasskey(e)}
@@ -120,5 +134,3 @@ const PasskeyModal = () => {
     </AlertDialog>
   );
 };
-
-export default PasskeyModal;

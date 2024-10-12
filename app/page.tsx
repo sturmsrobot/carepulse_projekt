@@ -1,7 +1,8 @@
-import PatientForm from "@/components/forms/PatientForm";
-import PasskeyModal from "@/components/PasskeyModal";
 import Image from "next/image";
 import Link from "next/link";
+
+import PatientForm from "@/components/forms/PatientForm";
+import { PasskeyModal } from "@/components/PasskeyModal";
 
 export default function Home({ searchParams }: SearchParamProps) {
   const isAdmin = searchParams.admin === "true";
@@ -19,7 +20,9 @@ export default function Home({ searchParams }: SearchParamProps) {
             alt="patient"
             className="mb-12 h-10 w-fit"
           />
+
           <PatientForm />
+
           <div className="text-14-regular mt-20 flex justify-between">
             <p className="justify-items-end text-dark-600 xl:text-left">
               © 2024 CarePulse
@@ -30,6 +33,7 @@ export default function Home({ searchParams }: SearchParamProps) {
           </div>
         </div>
       </section>
+
       <Image
         src="/assets/images/onboarding-img.png"
         height={1000}
