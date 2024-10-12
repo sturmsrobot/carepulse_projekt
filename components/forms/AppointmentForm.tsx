@@ -9,7 +9,10 @@ import { z } from "zod";
 
 import { SelectItem } from "../ui/select";
 import { Doctors } from "@/constants";
-import { createAppointment } from "@/lib/actions/appointment.actions";
+import {
+  createAppointment,
+  updateAppointment,
+} from "@/lib/actions/appointment.actions";
 import { getAppointmentSchema } from "@/lib/validation";
 import { Appointment } from "@/types/appwrite.types";
 
@@ -23,13 +26,15 @@ import NewAppointment from "@/app/patients/[userId]/new-appointment/page";
 const AppointmentForm = ({
   userId,
   patientId,
-  type = "create",
+  type = "planen",
   appointment,
+  setOpen,
 }: {
   userId: string;
   patientId: string;
-  type: "create" | "cancel" | "schedule";
+  type: "erstellen" | "planen" | "absagen";
   appointment?: Appointment;
+  setOpen: (open: boolean) => void;
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -39,11 +44,13 @@ const AppointmentForm = ({
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-      primaryPhysician: "",
-      schedule: new Date(),
-      reason: "",
-      note: "",
-      cancellationReason: "",
+      primaryPhysician: appointment ? appointment.primaryPhysician : "",
+      schedule: appointment ? new Date(appointment.schedule) : new Date(),
+      reason: appointment ? appointment.reason : "",
+      note: appointment ? appointment.note : "",
+      cancellationReason: appointment
+        ? appointment.cancellationReason || ""
+        : "",
     },
   });
 
@@ -52,10 +59,10 @@ const AppointmentForm = ({
 
     let status: Status;
     switch (type) {
-      case "schedule":
+      case "planen":
         status = "scheduled";
         break;
-      case "cancel":
+      case "absagen":
         status = "cancelled";
         break;
       default:
@@ -64,8 +71,7 @@ const AppointmentForm = ({
     }
 
     try {
-      if (type === "create" && patientId) {
-        console.log("ICH BIN HIER! CREATE!");
+      if (type === "erstellen" && patientId) {
         const newAppointmentData = {
           userId,
           patient: patientId,
@@ -76,9 +82,6 @@ const AppointmentForm = ({
           status: status as Status,
         };
         const newAppointment = await createAppointment(newAppointmentData);
-        console.log("Erstellter Termin:", newAppointment);
-
-        console.log("Appointment Data:", newAppointmentData);
 
         if (newAppointment) {
           form.reset();
@@ -86,22 +89,44 @@ const AppointmentForm = ({
             `/patients/${userId}/new-appointment/success?appointmentId=${newAppointment.$id}`
           );
         }
+      } else {
+        const appointmentToUpdate = {
+          userId,
+          appointmentId: appointment?.$id!,
+          appointment: {
+            primaryPhysician: values?.primaryPhysician,
+            schedule: new Date(values?.schedule),
+            status: status as Status,
+            cancellationReason: values?.cancellationReason,
+          },
+          type,
+        };
+        const updatedAppointment = await updateAppointment(appointmentToUpdate);
+
+        if (updatedAppointment) {
+          setOpen && setOpen(false); // sicherstellen, dass setOpen aufgerufen wird, wenn es übergeben wurde
+          form.reset();
+        } else {
+          console.error("Fehler: Der Termin konnte nicht aktualisiert werden.");
+        }
       }
     } catch (error) {
-      console.log("Fehler beim Verarbeiten des Termins:", error);
+      console.error("Fehler beim Verarbeiten des Termins:", error);
+    } finally {
+      setIsLoading(false); // sicherstellen, dass der Ladezustand zurückgesetzt wird
     }
   }
 
   let buttonLabel;
 
   switch (type) {
-    case "cancel":
+    case "absagen":
       buttonLabel = "Termin absagen";
       break;
-    case "create":
+    case "erstellen":
       buttonLabel = "Termin erstellen";
       break;
-    case "schedule":
+    case "planen":
       buttonLabel = "Termin buchen";
       break;
     default:
@@ -111,12 +136,14 @@ const AppointmentForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex-1">
-        <section className="mb-12 space-y-4">
-          <h1 className="header">Neuer Termin</h1>
-          <p className="text-dark-700">Jetzt neuen Termin anfordern!</p>
-        </section>
+        {type === "erstellen" && (
+          <section className="mb-12 space-y-4">
+            <h1 className="header">Neuer Termin</h1>
+            <p className="text-dark-700">Jetzt neuen Termin anfordern!</p>
+          </section>
+        )}
 
-        {type !== "cancel" && (
+        {type !== "absagen" && (
           <>
             <CustomFormField
               fieldType={FormFieldType.SELECT}
@@ -170,7 +197,7 @@ const AppointmentForm = ({
           </>
         )}
 
-        {type === "cancel" && (
+        {type === "absagen" && (
           <CustomFormField
             fieldType={FormFieldType.TEXTAREA}
             control={form.control}
@@ -183,7 +210,7 @@ const AppointmentForm = ({
         <SubmitButton
           isLoading={isLoading}
           className={`${
-            type === "cancel" ? "shad-danger-btn" : "shad-primary-btn"
+            type === "absagen" ? "shad-danger-btn" : "shad-primary-btn"
           } w-full`}
         >
           {buttonLabel}

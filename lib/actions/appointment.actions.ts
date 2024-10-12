@@ -9,6 +9,7 @@ import {
 } from "../appwrite.config";
 import { parseStringify } from "../utils";
 import { Appointment } from "@/types/appwrite.types";
+import { revalidatePath } from "next/cache";
 
 //  CREATE APPOINTMENT
 export const createAppointment = async (
@@ -92,6 +93,35 @@ export const getRecentAppointmentList = async () => {
   } catch (error) {
     console.error(
       "Beim Abrufen der letzten Termine ist ein Fehler aufgetreten:",
+      error
+    );
+  }
+};
+
+//  UPDATE APPOINTMENT
+export const updateAppointment = async ({
+  appointmentId,
+  userId,
+  appointment,
+  type,
+}: UpdateAppointmentParams) => {
+  try {
+    // Update appointment to scheduled -> https://appwrite.io/docs/references/cloud/server-nodejs/databases#updateDocument
+    const updatedAppointment = await databases.updateDocument(
+      DATABASE_ID!,
+      APPOINTMENT_COLLECTION_ID!,
+      appointmentId,
+      appointment
+    );
+
+    if (!updatedAppointment) throw new Error("Termin nicht gefunden.");
+
+    // TODO: SMS-Benachrichtigung
+    revalidatePath("/admin");
+    return parseStringify(updatedAppointment);
+  } catch (error) {
+    console.error(
+      "Beim Planen eines Termins ist ein Fehler aufgetreten:",
       error
     );
   }
